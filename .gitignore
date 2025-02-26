@@ -8,3 +8,23 @@ __pycache__
 *.sqlite3
 .vscode
 
+__pycache__/*.py[cod]
+__pycache__/*.pyo
+__pycache__/*.pyd
+__pycache__/*.db
+__pycache__/*.sqlite3
+
+# Local configuration files
+*.local.json
+*.local.yaml
+*.local.yml
+*.local.toml
+*.local.env
+*.local.envrc
+*.local.env.example
+*.local.envrc.example
+*.local.env.example
+*.local.envrc.example
+
+
+        

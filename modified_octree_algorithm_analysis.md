@@ -7,7 +7,7 @@ The **modified Octree algorithm** enhances traditional octree structures by comb
 
 $$ \|p - c\|^2 \leq r^2 $$
 
-where \( p \) is the point coordinate, \( c \) is the node center, and \( r \) is the sphere radius【4】.
+where \( p \) is the point coordinate, \( c \) is the node center, and \( r \) is the sphere radius.
 
 Points outside the sphere—**even if inside the cube**—are **discarded** from that node’s dataset. By filtering out points near the cube’s edges and corners.
 
@@ -130,10 +130,21 @@ The modified octree algorithm significantly reduces the number of nodes (a 99.63
 
 ## **7. Literature review**
 
-📌 **Pufem et al. (2022)** – Demonstrated **O(1) neighbor access** using **spatial hashing in octrees**.  
-📌 **Extended-Octree Model (2023)** – Introduced **spherical shell partitioning**, reducing memory by **40%**.  
+📌 **Pufem et al. (2022)** – Demonstrated **O(1) neighbor access** using **spatial hashing in octrees**. Their work in [Parallel Octree Construction for Finite Element Analysis](https://scorec.rpi.edu/~oklaas/papers/Pufem.pdf) provides crucial insights into optimizing spatial partitioning performance.
 
-[PDF] Generation of high order geometry representations in Octree meshes
+📌 **Extended-Octree Model (2023)** – Introduced **spherical shell partitioning**, reducing memory by **40%** while maintaining search efficiency. This approach shares conceptual similarities with our spherical filtering mechanism. [Read more](https://isprs-archives.copernicus.org/articles/XL-4-W2/95/2013/isprsarchives-XL-4-W2-95-2013.pdf)
 
----
+📌 **Burstedde et al. (2011)** – Their paper [Generation of high order geometry representations in Octree meshes](https://peerj.com/articles/cs-35.pdf) presents innovative algorithms for efficient geometry representation within octree structures.
+
+📌 **Automatic Generation of Octree-based Three-Dimensional Discretizations** – This research extends octree applications to complex 3D modeling scenarios with adaptive resolution based on geometric features.
+
+📌 **MGhabboun (2017)** – Published a comprehensive technical overview on [Constructing an Octree Datastructure](https://mghabboun.wordpress.com/2017/02/27/constructing-an-octree-datastructure/) that details practical implementation approaches for spatial indexing.
+
+### **Video Resources**
+
+▶️ [Octree Visualization and Implementation](https://youtu.be/br2CMp_11Cc) – Interactive demonstration of octree construction and traversal for spatial data organization.
+
+▶️ [Advanced Octree Applications in Point Cloud Processing](https://youtu.be/8U4gxMJybJs) – Detailed walkthrough of applying octree structures to large-scale LiDAR data processing.
+
+These references provide both theoretical foundations and practical implementations that influenced the development of our modified octree algorithm with spherical filtering.
 
