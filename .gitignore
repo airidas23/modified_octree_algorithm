@@ -1,0 +1,10 @@
+.cadence
+.venv
+__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.vscode
+

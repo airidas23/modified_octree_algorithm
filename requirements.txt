@@ -1,0 +1,21 @@
+# Data processing
+pandas
+numpy
+
+# Point cloud libraries
+laspy
+geemap[lidar]
+open3d
+pyvista
+
+# Visualization
+matplotlib
+seaborn
+ipygany
+jupyter
+
+# Machine learning
+scikit-learn
+
+# Optional performance libraries
+numba
