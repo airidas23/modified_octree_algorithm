@@ -1,4 +1,4 @@
-# modified_octree_algorithm# Modified Octree Algorithm
+# Modified Octree Algorithm
 
 This project implements a modified Octree algorithm for 3D point cloud data. Unlike standard Octree implementations, this version embeds a sphere in each Octree cube, keeping only points within the sphere for further subdivision.
 

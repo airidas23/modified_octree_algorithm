@@ -35,23 +35,54 @@ If a child node has no points, it is completely left out, which stops the tree f
 
 ### **2.1 Data preprocessing workflow**
 
-The pipeline begins with raw data import (e.g., **reading a LiDAR LAS file**). The program first loads the **point cloud** and reports the **initial count (N points)**. Next, **sphere containment filtering** at the root node removes **peripheral noise** from the dataset:
+The pipeline begins with raw data import from a **LiDAR LAS file** containing **20,985,999 points** (approximately 21 million):
 
 ```python
 # Load point cloud and apply root-level sphere filtering
-las = laspy.read(file_path)
-points = np.vstack((las.x, las.y, las.z)).T
 scaler = RobustScaler()
-points_norm = scaler.fit_transform(points)
+    df_scaled = df.copy()
+    df_scaled[columns] = scaler.fit_transform(df[columns])
+    return df_scaled
 ```
 
-| **Processing Stage** | **Point Count** |
-|----------------------|---------------|
-| **Raw LAS Import** | **N = 1,000,000 (100%)** |
-| **After Root Sphere Containment** | **M ≈ 950,000 (95%)** |
-| **Final Octree** | **M ≈ 950,000 (95%)** |
+#### **Raw LiDAR Data Statistics**
 
-Outlier removal at the root **eliminates ~5% of the points**, ensuring the octree focuses on **core data**, reducing noise while preserving accuracy【4】.
+Before normalization, the dataset shows significant variance and potential outliers, particularly in the intensity values:
+
+| **Attribute** | **Count** | **Mean** | **Standard Deviation** | **Min** | **25%** | **50%** | **75%** | **Max** |
+|---------------|-----------|----------|------------------------|---------|---------|---------|---------|---------|
+| **Intensity** | 20,985,999 | 744.10 | 4,578.27 | 1.00 | 311.00 | 398.00 | 502.00 | 65,535.00 |
+| **scan_angle_rank** | 20,985,999 | -0.41 | 17.23 | -30.00 | -16.00 | 0.00 | 14.00 | 30.00 |
+| **user_data** | 20,985,999 | 54.71 | 6.19 | 0.00 | 53.00 | 54.00 | 56.00 | 255.00 |
+| **point_source_id** | 20,985,999 | 1,452.96 | 93.92 | 1,441.00 | 1,443.00 | 1,444.00 | 1,444.00 | 2,391.00 |
+| **gps_time** | 20,985,999 | 192,525,600.00 | 1,737,942.00 | 192,350,300.00 | 192,351,400.00 | 192,351,400.00 | 192,351,900.00 | 209,885,600.00 |
+
+The raw data analysis reveals that:
+- Intensity values are heavily right-skewed with outliers up to 65,535
+- Most points are consistently classified as **class 2** (ground)
+- Return numbers are predominantly 1, indicating first returns
+- GPS time values indicate consistent data collection intervals
+
+#### **After RobustScaler Normalization**
+
+After applying RobustScaler, the data distribution is significantly improved for processing:
+
+| **Normalized Data Sample** | **X** | **Y** | **Z** | **intensity** |
+|-------------------|---------|---------|---------|-------------|
+| **Row 0** | -1.05281 | 0.671937 | -0.164246 | 0.303665 |
+| **Row 1** | -1.05281 | 0.663984 | -0.133595 | -0.057592 |
+| **Row 2** | -1.05281 | 0.663528 | -0.133129 | 0.261780 |
+| **Row 3** | -1.05281 | 0.657991 | -0.117071 | 0.089005 |
+| **Row 4** | -1.05281 | 0.653540 | -0.111141 | -0.680628 |
+
+The RobustScaler transformation:
+- Centers values around 0, with most coordinates falling between -2 and 2
+- Eliminates the influence of extreme outliers in intensity values
+- Preserves relative spatial relationships while normalizing the scale
+- Enables more effective sphere-based distance calculations
+
+After preprocessing, pipeline performs:
+**Statistical normalization** using `RobustScaler` to handle outliers effectively
 
 ---
 
@@ -122,9 +153,9 @@ This framework enables **efficient 3D visualization**.
 The modified octree algorithm significantly reduces the number of nodes (a 99.63% reduction compared to traditional octrees), achieving much faster search times (55.1% faster). While it maintains an O(log N) insertion complexity (with an added O(m) sphere check per node), the approach increases memory usage due to different handling. 
 
 ### **Future enhancements**  
-🚀 **ML-Based Optimization** – Dynamically adjust `max_depth` and `min_points` using **machine learning**. Implement a data-driven adaptive depth selection algorithm. Train a model using point cloud density statistics to predict optimal max_depth and min_points dynamically based on real-time input. 
+**ML-Based Optimization** – Dynamically adjust `max_depth` and `min_points` using **machine learning**. Implement a data-driven adaptive depth selection algorithm. Train a model using point cloud density statistics to predict optimal max_depth and min_points dynamically based on real-time input. 
    
-  **Future work should focus on optimizing memory through** strategies like hierarchical management or adaptive depth scaling.
+**Future work should focus on optimizing memory through** strategies like hierarchical management or adaptive depth scaling.
 
 ---
 
@@ -146,5 +177,4 @@ The modified octree algorithm significantly reduces the number of nodes (a 99.63
 
 ▶️ [Advanced Octree Applications in Point Cloud Processing](https://youtu.be/8U4gxMJybJs) – Detailed walkthrough of applying octree structures to large-scale LiDAR data processing.
 
-These references provide both theoretical foundations and practical implementations that influenced the development of our modified octree algorithm with spherical filtering.
 
