@@ -25,6 +25,6 @@ __pycache__/*.sqlite3
 *.local.envrc.example
 *.local.env.example
 *.local.envrc.example
-
+data/2743_1234.las
 
         
